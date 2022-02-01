@@ -1,6 +1,38 @@
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddEndpointsApiExplorer();
+
+builder.Services.AddSwaggerGen();
+
 var app = builder.Build();
 
-app.MapGet("/", () => "Hello World!");
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+}
+
+app.UseSwagger();
+ 
+//app.MapGet("/cliente", () => new Cliente("Nome", "jo@a.o"));
+
+app.UseSwaggerUI();
 
 app.Run();
+
+
+public record Cliente(string Nome, string Email)
+{
+    public int Id { get; set; }
+    public string? Nome { get; set; }
+}
+
+public class AppDbContext : DbContext
+{
+    public AppDbContext(DbContextOptions options) : base(options)
+    {
+
+    }
+    public DbSet<Cliente> Clientes { get; set; }
+}
